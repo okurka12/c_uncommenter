@@ -2,9 +2,13 @@
 Simple program that removes comments from C code.
 ## Usage
 It takes input on stdin and outputs to stdout. Hence it can be used like so:
+
 `cat input.c | ./uncomment > output.c`
+
 on GNU/Linux's Bash or similarly
-`Get-Content input.c | .\uncomment.exe > output.c` 
+
+`type input.c | .\uncomment.exe > output.c` 
+
 on Windows' cmd.
 
 ## Build
