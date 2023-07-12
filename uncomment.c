@@ -36,6 +36,7 @@ void handle_state(uint8_t *state, char c) {
 
         case 2:
             if (c == '\n') {
+				putchar('\n');
                 *state = 0;
             }
             break;
