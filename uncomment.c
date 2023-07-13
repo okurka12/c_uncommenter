@@ -1,11 +1,21 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void handle_state(uint8_t *state, char c) {
-    
-    // to make sense of this long switch, look at the FSM diagram in this repo
+/* states for the state machine (see diagram in this repo) */
+enum state {
+    INI,       // initial state
+    SLASH,     // received first slash
+    SLC,       // single-line comment (received second slash)
+    MLC,       // multi-line comment (received asterisk)
+    MLC_EXIT,  // potential MLC exit (received asterisk in MLC)
+    STR,       // inside a string literal
+    QESC       // quotation mark escape
+};
+
+/* handles state transitions and outputs characters accordingly */
+void handle_state(enum state *state, char c) {
     switch (*state) {
-        case 0:
+        case INI:
             if (c == '/') {
                 *state = 1;
             }
@@ -18,7 +28,7 @@ void handle_state(uint8_t *state, char c) {
             }
             break;
 
-        case 1:
+        case SLASH:
             if (c == '/') {
                 *state = 2;
             }
@@ -32,20 +42,20 @@ void handle_state(uint8_t *state, char c) {
             }
             break;
 
-        case 2:
+        case SLC:
             if (c == '\n') {
 				putchar('\n');
                 *state = 0;
             }
             break;
 
-        case 3:
+        case MLC:
             if (c == '*') {
                 *state = 4;
             }
             break;
 
-        case 4:
+        case MLC_EXIT:
             if (c == '/') {
                 *state = 0;
             }
@@ -54,7 +64,7 @@ void handle_state(uint8_t *state, char c) {
             }
             break;
 
-        case 5:
+        case STR:
             if (c == '\\') {
                 putchar('\\');
                 *state = 6;
@@ -68,7 +78,7 @@ void handle_state(uint8_t *state, char c) {
             }
             break;
 
-        case 6:
+        case QESC:
             putchar(c);
             *state = 5;
     }
@@ -77,7 +87,7 @@ void handle_state(uint8_t *state, char c) {
 
 int main() {
     int c;
-    uint8_t state = 0;
+    enum state state = 0;
     while ((c = getchar()) != EOF) {
         handle_state(&state, c);
     }
