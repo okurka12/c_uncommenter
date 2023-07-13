@@ -78,7 +78,7 @@ void handle_state(uint8_t *state, char c) {
 }
 
 int main() {
-    int16_t c;
+    int c;
     uint8_t state = 0;
     while ((c = getchar()) != EOF) {
         handle_state(&state, c);
