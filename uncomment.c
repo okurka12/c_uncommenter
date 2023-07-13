@@ -2,10 +2,8 @@
 #include <stdint.h>
 
 void handle_state(uint8_t *state, char c) {
-    /**
-     * to make sense of this long switch, look at the states graph at
-     * https://imgur.com/a/JDG4rpf
-    */
+    
+    // to make sense of this long switch, look at the FSM diagram in this repo
     switch (*state) {
         case 0:
             if (c == '/') {
