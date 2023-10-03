@@ -17,11 +17,11 @@ void handle_state(enum state *state, char c) {
     switch (*state) {
         case INI:
             if (c == '/') {
-                *state = 1;
+                *state = SLASH;
             }
             else if (c == '"') {
                 putchar('"');
-                *state = 5;
+                *state = STR;
             }
             else {
                 putchar(c);
@@ -30,48 +30,48 @@ void handle_state(enum state *state, char c) {
 
         case SLASH:
             if (c == '/') {
-                *state = 2;
+                *state = SLC;
             }
             else if (c == '*') {
-                *state = 3;
+                *state = MLC;
             }
             else {
                 putchar('/');
                 putchar(c);
-                *state = 0;
+                *state = INI;
             }
             break;
 
         case SLC:
             if (c == '\n') {
 				putchar('\n');
-                *state = 0;
+                *state = INI;
             }
             break;
 
         case MLC:
             if (c == '*') {
-                *state = 4;
+                *state = MLC_EXIT;
             }
             break;
 
         case MLC_EXIT:
             if (c == '/') {
-                *state = 0;
+                *state = INI;
             }
             else {
-                *state = 3;
+                *state = MLC;
             }
             break;
 
         case STR:
             if (c == '\\') {
                 putchar('\\');
-                *state = 6;
+                *state = QESC;
             }
             else if (c == '"') {
                 putchar('"');
-                *state = 0;
+                *state = INI;
             }
             else {
                 putchar(c);
@@ -80,7 +80,7 @@ void handle_state(enum state *state, char c) {
 
         case QESC:
             putchar(c);
-            *state = 5;
+            *state = STR;
     }
 
 }
